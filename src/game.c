@@ -22,21 +22,41 @@ void game_init(Game* game) {
     tetromino_init(&game->current, random_tetromino());
     tetromino_init(&game->next, random_tetromino());
     tetromino_init(&game->hold, random_tetromino());
+    tetromino_init(&game->ghost, TETRO_I);  // 初始化影子方块
     
     game->has_held = false;
     game->score = 0;
     game->level = 0;
     game->lines_cleared = 0;
     game->lines_to_level = 10;
-    game->drop_interval = 3000;  // 修复：初始 3 秒，更充裕的反应时间
+    game->drop_interval = 3000;
     game->running = true;
     game->paused = false;
     game->game_over = false;
+    
+    game_calculate_ghost(game);
 }
 
 void game_destroy(Game* game) {
     if (game) {
         free(game);
+    }
+}
+
+// 计算影子方块位置
+void game_calculate_ghost(Game* game) {
+    if (!game || game->game_over) return;
+    
+    // 复制当前方块到影子方块
+    game->ghost = game->current;
+    
+    // 一直下落直到碰撞
+    while (1) {
+        game->ghost.y++;
+        if (board_check_collision(&game->board, &game->ghost)) {
+            game->ghost.y--;  // 退回一格
+            break;
+        }
     }
 }
 
@@ -58,9 +78,8 @@ void game_update(Game* game) {
             if (game->lines_to_level <= 0) {
                 game->level++;
                 game->lines_to_level = 10;
-                // 修复：更慢的加速曲线（每级只加快 10%）
                 game->drop_interval = game->drop_interval * 90 / 100;
-                if (game->drop_interval < 300) game->drop_interval = 300;  // 最慢 300ms
+                if (game->drop_interval < 300) game->drop_interval = 300;
             }
         }
         
@@ -72,6 +91,9 @@ void game_update(Game* game) {
             game->game_over = true;
         }
     }
+    
+    // 更新影子方块
+    game_calculate_ghost(game);
 }
 
 void game_drop(Game* game) {
@@ -88,6 +110,7 @@ void game_drop(Game* game) {
     }
     
     score_add(&game->score, score_calculate_drop(drop_distance, false));
+    game_calculate_ghost(game);
 }
 
 void game_hard_drop(Game* game) {
@@ -104,4 +127,5 @@ void game_hard_drop(Game* game) {
     }
     
     score_add(&game->score, score_calculate_drop(drop_distance, true));
+    game_calculate_ghost(game);
 }

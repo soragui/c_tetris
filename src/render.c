@@ -1,10 +1,9 @@
 #include "render.h"
 #include <ncurses.h>
-#include <stdio.h>
 
 // 全局偏移量 - 让界面向右和向上移动
 #define OFFSET_X 8    // 向右移动 8 列
-#define OFFSET_Y -2   // 向上移动 2 行
+#define OFFSET_Y -1   // 向上移动 2 格
 
 void render_init(void) {
     initscr();

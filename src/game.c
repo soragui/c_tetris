@@ -28,7 +28,7 @@ void game_init(Game* game) {
     game->level = 0;
     game->lines_cleared = 0;
     game->lines_to_level = 10;
-    game->drop_interval = 100000000;  // 修复：初始 2 秒，给新手反应时间
+    game->drop_interval = 3000;  // 修复：初始 3 秒，更充裕的反应时间
     game->running = true;
     game->paused = false;
     game->game_over = false;
@@ -58,9 +58,9 @@ void game_update(Game* game) {
             if (game->lines_to_level <= 0) {
                 game->level++;
                 game->lines_to_level = 10;
-                // 修复：速度降低更慢一些
-                //game->drop_interval = game->drop_interval * 85 / 100;
-                //if (game->drop_interval < 200) game->drop_interval = 200;
+                // 修复：更慢的加速曲线（每级只加快 10%）
+                game->drop_interval = game->drop_interval * 90 / 100;
+                if (game->drop_interval < 300) game->drop_interval = 300;  // 最慢 300ms
             }
         }
         

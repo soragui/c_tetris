@@ -39,29 +39,29 @@ void render_board_border(int offset_x, int offset_y) {
     attron(COLOR_PAIR(8) | A_BOLD);
     
     // 标题
-    mvprintw(by - 1, bx * 2 + 3, "╔═══ TETRIS ═══╗");
+    mvprintw(by - 1, bx * 2 + 5, "=== TETRIS ===");
     
     // 上边框
-    mvaddch(by, bx * 2 - 2, ACS_ULCORNER);
+    mvaddch(by, bx * 2 - 2, '+');
     for (int i = 0; i < BOARD_WIDTH; i++) {
-        mvaddch(by, bx * 2 + i * 2, ACS_HLINE);
-        mvaddch(by, bx * 2 + i * 2 + 1, ACS_HLINE);
+        mvaddch(by, bx * 2 + i * 2, '-');
+        mvaddch(by, bx * 2 + i * 2 + 1, '-');
     }
-    mvaddch(by, bx * 2 + BOARD_WIDTH * 2, ACS_URCORNER);
+    mvaddch(by, bx * 2 + BOARD_WIDTH * 2, '+');
     
     // 下边框
-    mvaddch(by + BOARD_HEIGHT + 1, bx * 2 - 2, ACS_LLCORNER);
+    mvaddch(by + BOARD_HEIGHT + 1, bx * 2 - 2, '+');
     for (int i = 0; i < BOARD_WIDTH; i++) {
-        mvaddch(by + BOARD_HEIGHT + 1, bx * 2 + i * 2, ACS_HLINE);
-        mvaddch(by + BOARD_HEIGHT + 1, bx * 2 + i * 2 + 1, ACS_HLINE);
+        mvaddch(by + BOARD_HEIGHT + 1, bx * 2 + i * 2, '-');
+        mvaddch(by + BOARD_HEIGHT + 1, bx * 2 + i * 2 + 1, '-');
     }
-    mvaddch(by + BOARD_HEIGHT + 1, bx * 2 + BOARD_WIDTH * 2, ACS_LRCORNER);
+    mvaddch(by + BOARD_HEIGHT + 1, bx * 2 + BOARD_WIDTH * 2, '+');
     
     // 左右边框
     for (int i = 1; i <= BOARD_HEIGHT; i++) {
         if (by + i >= 0) {
-            mvaddch(by + i, bx * 2 - 2, ACS_VLINE);
-            mvaddch(by + i, bx * 2 + BOARD_WIDTH * 2, ACS_VLINE);
+            mvaddch(by + i, bx * 2 - 2, '|');
+            mvaddch(by + i, bx * 2 + BOARD_WIDTH * 2, '|');
         }
     }
     
@@ -81,7 +81,7 @@ void render_ghost(Tetromino* t, int offset_x, int offset_y) {
                     int screen_x = x + offset_x + OFFSET_X;
                     int screen_y = y + offset_y + OFFSET_Y + 1;
                     if (screen_y >= 0) {
-                        mvaddstr(screen_y, screen_x * 2, "░░");
+                        mvaddstr(screen_y, screen_x * 2, "..");
                     }
                 }
             }
@@ -234,10 +234,11 @@ void render_game(Game* game) {
         attron(A_REVERSE | A_BOLD);
         int sy = BOARD_HEIGHT / 2 + OFFSET_Y;
         if (sy >= 0) {
-            mvprintw(sy, 3 + OFFSET_X * 2, "╔══ GAME OVER ══╗");
-            mvprintw(sy + 1, 3 + OFFSET_X * 2, "║ Score: %-6d ║", game->score);
-            mvprintw(sy + 2, 3 + OFFSET_X * 2, "║ R-Restart    ║");
-            mvprintw(sy + 3, 3 + OFFSET_X * 2, "╚══════════════╝");
+            mvprintw(sy, 5 + OFFSET_X * 2, "+---------------+");
+            mvprintw(sy + 1, 5 + OFFSET_X * 2, "|  GAME OVER  |");
+            mvprintw(sy + 2, 5 + OFFSET_X * 2, "| Score: %-6d |", game->score);
+            mvprintw(sy + 3, 5 + OFFSET_X * 2, "| R-Restart   |");
+            mvprintw(sy + 4, 5 + OFFSET_X * 2, "+---------------+");
         }
         attroff(A_REVERSE | A_BOLD);
     }
@@ -247,9 +248,10 @@ void render_game(Game* game) {
         attron(A_REVERSE | A_BOLD);
         int sy = BOARD_HEIGHT / 2 + OFFSET_Y;
         if (sy >= 0) {
-            mvprintw(sy, 6 + OFFSET_X * 2, "╔═══ PAUSED ═══╗");
-            mvprintw(sy + 1, 6 + OFFSET_X * 2, "║ P-Resume    ║");
-            mvprintw(sy + 2, 6 + OFFSET_X * 2, "╚═════════════╝");
+            mvprintw(sy, 8 + OFFSET_X * 2, "+-------------+");
+            mvprintw(sy + 1, 8 + OFFSET_X * 2, "|   PAUSED  |");
+            mvprintw(sy + 2, 8 + OFFSET_X * 2, "| P-Resume  |");
+            mvprintw(sy + 3, 8 + OFFSET_X * 2, "+-------------+");
         }
         attroff(A_REVERSE | A_BOLD);
     }
